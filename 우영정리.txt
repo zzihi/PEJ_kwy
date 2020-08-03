@@ -1,0 +1,151 @@
+C:\tmp 
+kafka-logs, zookeeper 폴더 삭제
+
+C:\kafka_2.13-2.5.0\bin\windows 경로가서
+CMD 2개 창 띄워서 주키퍼 카프카 실행
+zookeeper-server-start.bat ../../config/zookeeper.properties
+kafka-server-start.bat ../../config/server.properties
+
+CMD창 가서 이벤트 로그 보기 
+kafka-console-consumer.bat --bootstrap-server http://localhost:9092 --topic PEJ --from-beginning
+
+인텔리J 에서 각 서비스 spring-boot:run
+
+CMD 새 창 띄워서
+
+발주처리
+http POST localhost:8088/orders orderId="1" prdId="111" prdQty=100 prdPrice=1000 prdNm="껌"
+생성확인
+http localhost:8088/orders
+http localhost:8088/deliveries 
+http localhost:8088/products
+마이페이지확인
+http localhost:8088/orderViews (수정사항 : deliveryStatus NULL, deliveryId 삭제필요)
+http localhost:8088/salesViews
+발주삭제처리
+http PATCH http://localhost:8088/orders/1 orderStatus="CANCLED"
+삭제확인
+http localhost:8088/orders
+http localhost:8088/deliveries 
+마이페이지확인
+http localhost:8088/orderViews (수정사항 : deliveryStatus NULL 해결하면 될듯)
+구매
+http POST localhost:8088/purchases purchaseId="11" purchaseStatus="구매" prdId="111" purchaseQty=3 purchaseAmt="3000" prdNm="껌" prdPrice="1000" custNm="구매자"
+구매확인
+http localhost:8088/purchases
+http localhost:8088/products
+마이페이지확인
+http localhost:8088/salesViews (수정사항 : prdNm, prdPrice 세팅)
+구매취소
+http DELETE localhost:8088/purchases/1
+구매취소확인
+http localhost:8088/purchases
+http localhost:8088/products
+마이페이지확인
+http localhost:8088/salesViews (수정사항 : prdNm, prdPrice 세팅)
+
+깃허브 repository 생성 (서비스별로 생성)
+https://github.com/
+HTTP URL 복사해서 보관
+https://github.com/niceduck76/aws-order.git
+CMD 창
+해당 폴더 가서 D:\강우영\PEJ\Purchase
+git config --local credential.helper ""
+git init
+git config --global user.name "gomttang85"
+git config --global user.email "gomttang4@naver.com"
+git remote add origin https://github.com/gomttang85/purchase.git
+git remote -v
+Git status
+Git add .
+Git commit ?m “first commit”
+Git push ?u origin master
+
+Ubuntu 띄우고
+폴더 생성
+mkdir PEJ
+cd PEJ
+git clone https://github.com/niceduck76/aws-order.git
+cd aws-order
+rm -rf ./target
+mvn package
+
+도커 이미지 삭제 (기존)
+docker image rm $(docker images -q) # 한번에 모든 도커 이미지 지우기
+docker images
+ECR - micro service 마다 repository 생성(repository명이 이미지명)
+docker build -t 052937454741.dkr.ecr.us-east-2.amazonaws.com/admin04-order:v1 .
+docker images
+로그인
+aws configure
+aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 052937454741.dkr.ecr.us-east-2.amazonaws.com
+docker push 052937454741.dkr.ecr.us-east-2.amazonaws.com/admin04-order:v1
+aws에서 이미지 확인
+
+컨테이너 만들기
+eksctl create cluster --name skteam1-sk-Cluster --version 1.15 --nodegroup-name standard-workers --node-type t3.medium --nodes 2 --nodes-min 1 --nodes-max 3
+aws eks --region us-east-2 update-kubeconfig --name skteam1-sk-Cluster
+확인
+kubectl config current-context
+kubectl get all
+kubectl create deploy my-order --image=052937454741.dkr.ecr.us-east-2.amazonaws.com/admin04-order:v1
+kubectl get all
+Kubectl expose deploy my-order --type=ClusterIP --port=8080
+
+카프카 설치
+curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+kubectl --namespace kube-system create sa tiller
+kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
+helm init --service-account tiller
+kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
+helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator
+helm repo update
+helm install --name my-kafka --namespace kafka incubator/kafka
+
+kafka 설치 후 모니터링 - Watch kubectl get all -n kafka 
+
+테스트
+POD주소확인(node IP)
+kubectl get po -o wide
+
+
+
+시나리오 정리
+
+[기능적 요구사항]
+--발주
+1. 점장이 상품을 발주 한다.
+2. 본사가 발주된 상품을 배송 한다.
+3. 배송이 완료되면 알바가 상품을 입고처리 한다.
+4. 상품발주시 점장 마이페이지에 주문view, 판매view 추가된다.
+
+--발주취소
+1. 점장이 상품을 발주취소 할수있다.
+2. (시스템이) 발주취소된 상품을 배송취소한다
+3. 상품발주 취소시 점장 마이페이지에 주문view 변경된다.
+
+--구매
+1. 고객이 상품을 구매한다.
+2. 상품구매시 상품의 재고가 변경 된다.
+3. 상품 구매시 점장 마이페이지에 판매view 변경된다.
+
+--구매취소
+1. 고객이 상품구매를 취소한다.
+2. 상품구매 취소시 상품의 재고가 변경 된다.
+3. 상품구매 취소시 점장 마이페이지에 판매view 변경된다.
+
+[비기능적 요구사항]
+1. 트랜잭션
+- 상품발주 취소시 상품배송 자동 취소 처리 Sync 호출
+
+2. 장애격리
+- 매입매출관리 기능이 수행되지 않더라도 구매는 365일 24시간 가능해야 한다 Async (event-driven), Eventual Consistency
+- 구매가 과중되면 재고변경을 잠시동안 받지 않고 재고변경을 잠시후에 하도록 유도한다 Circuit breaker, fallback (확인필요)
+
+3. 성능
+- 점장이 주문,판매 화면으로 매입매출을 조회할수 있어야 한다 CQRS
+- 구매가 발생할때 마다 상품재고가 변경될수 있어야 한다 Event driven
+
+
+
+
