@@ -71,6 +71,9 @@ kubectl autoscale deploy delivery --min=1 --max=10 --cpu-percent=15
             periodSeconds: 5
             failureThreshold: 10
 
+[장애격리]
+클러스터 내에서 이벤트확인
+kubectl -n kafka exec -ti my-kafka-0 -- /usr/bin/kafka-console-consumer --bootstrap-server my-kafka:9092 --topic PEJ --from-beginning
 
 //
 skccadmin@SKCC16D00070:~$ kubectl get hpa
