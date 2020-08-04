@@ -1,102 +1,114 @@
 C:\tmp 
-kafka-logs, zookeeper Æú´õ »èÁ¦
+kafka-logs, zookeeper í´ë” ì‚­ì œ
 
-C:\kafka_2.13-2.5.0\bin\windows °æ·Î°¡¼­
-CMD 2°³ Ã¢ ¶ç¿ö¼­ ÁÖÅ°ÆÛ Ä«ÇÁÄ« ½ÇÇà
+C:\kafka_2.13-2.5.0\bin\windows ê²½ë¡œê°€ì„œ
+CMD 2ê°œ ì°½ ë„ì›Œì„œ ì£¼í‚¤í¼ ì¹´í”„ì¹´ ì‹¤í–‰
 zookeeper-server-start.bat ../../config/zookeeper.properties
 kafka-server-start.bat ../../config/server.properties
 
-CMDÃ¢ °¡¼­ ÀÌº¥Æ® ·Î±× º¸±â 
+CMDì°½ ê°€ì„œ ì´ë²¤íŠ¸ ë¡œê·¸ ë³´ê¸° 
 kafka-console-consumer.bat --bootstrap-server http://localhost:9092 --topic PEJ --from-beginning
 
-ÀÎÅÚ¸®J ¿¡¼­ °¢ ¼­ºñ½º spring-boot:run
+ì¸í…”ë¦¬J ì—ì„œ ê° ì„œë¹„ìŠ¤ spring-boot:run
 
-CMD »õ Ã¢ ¶ç¿ö¼­
+CMD ìƒˆ ì°½ ë„ì›Œì„œ
 
-¹ßÁÖÃ³¸®
-http POST localhost:8088/orders orderId="1" prdId="111" prdQty=100 prdPrice=1000 prdNm="²­"
-»ı¼ºÈ®ÀÎ
+ë°œì£¼ì²˜ë¦¬
+http POST localhost:8088/orders orderId="1" prdId="111" prdQty=100 prdPrice=1000 prdNm="ê³¼ì"
+ìƒì„±í™•ì¸
 http localhost:8088/orders
-http localhost:8088/deliveries 
+http localhost:8088/deliveries
 http localhost:8088/products
-¸¶ÀÌÆäÀÌÁöÈ®ÀÎ
-http localhost:8088/orderViews (¼öÁ¤»çÇ× : deliveryStatus NULL, deliveryId »èÁ¦ÇÊ¿ä)
+ë§ˆì´í˜ì´ì§€í™•ì¸
+http localhost:8088/orderViews (ìˆ˜ì •ì‚¬í•­ : deliveryStatus NULL, deliveryId ì‚­ì œí•„ìš”)
 http localhost:8088/salesViews
-¹ßÁÖ»èÁ¦Ã³¸®
-http PATCH http://localhost:8088/orders/1 orderStatus="CANCLED"
-»èÁ¦È®ÀÎ
-http localhost:8088/orders
-http localhost:8088/deliveries 
-¸¶ÀÌÆäÀÌÁöÈ®ÀÎ
-http localhost:8088/orderViews (¼öÁ¤»çÇ× : deliveryStatus NULL ÇØ°áÇÏ¸é µÉµí)
-±¸¸Å
-http POST localhost:8088/purchases purchaseId="11" purchaseStatus="±¸¸Å" prdId="111" purchaseQty=3 purchaseAmt="3000" prdNm="²­" prdPrice="1000" custNm="±¸¸ÅÀÚ"
-±¸¸ÅÈ®ÀÎ
+ë°œì£¼ì‚­ì œì²˜ë¦¬
+http PATCH localhost:8088/orders/1 orderStatus="CANCELLED"
+ì‚­ì œí™•ì¸
+http a8316a2fd13f14758bb742839095cb6a-1560133616.us-east-2.elb.amazonaws.com:8080/orders
+http a8316a2fd13f14758bb742839095cb6a-1560133616.us-east-2.elb.amazonaws.com:8080/deliveries
+ë§ˆì´í˜ì´ì§€í™•ì¸
+http a8316a2fd13f14758bb742839095cb6a-1560133616.us-east-2.elb.amazonaws.com:8080/orderViews (ìˆ˜ì •ì‚¬í•­ : deliveryStatus NULL í•´ê²°í•˜ë©´ ë ë“¯)
+êµ¬ë§¤
+http POST localhost:8088/purchases purchaseId="11" purchaseStatus="êµ¬ë§¤" prdId="111" purchaseQty=3 purchaseAmt="3000" prdNm="ê»Œ" prdPrice="1000" custNm="êµ¬ë§¤ì"
+êµ¬ë§¤í™•ì¸
 http localhost:8088/purchases
 http localhost:8088/products
-¸¶ÀÌÆäÀÌÁöÈ®ÀÎ
-http localhost:8088/salesViews (¼öÁ¤»çÇ× : prdNm, prdPrice ¼¼ÆÃ)
-±¸¸ÅÃë¼Ò
+ë§ˆì´í˜ì´ì§€í™•ì¸
+http localhost:8088/salesViews (ìˆ˜ì •ì‚¬í•­ : prdNm, prdPrice ì„¸íŒ…)
+êµ¬ë§¤ì·¨ì†Œ
 http DELETE localhost:8088/purchases/1
-±¸¸ÅÃë¼ÒÈ®ÀÎ
+êµ¬ë§¤ì·¨ì†Œí™•ì¸
 http localhost:8088/purchases
 http localhost:8088/products
-¸¶ÀÌÆäÀÌÁöÈ®ÀÎ
-http localhost:8088/salesViews (¼öÁ¤»çÇ× : prdNm, prdPrice ¼¼ÆÃ)
+ë§ˆì´í˜ì´ì§€í™•ì¸
+http localhost:8088/salesViews (ìˆ˜ì •ì‚¬í•­ : prdNm, prdPrice ì„¸íŒ…)
 
-±êÇãºê repository »ı¼º (¼­ºñ½ºº°·Î »ı¼º)
+ê¹ƒí—ˆë¸Œ repository ìƒì„± (ì„œë¹„ìŠ¤ë³„ë¡œ ìƒì„±)
 https://github.com/
-HTTP URL º¹»çÇØ¼­ º¸°ü
+HTTP URL ë³µì‚¬í•´ì„œ ë³´ê´€
 https://github.com/niceduck76/aws-order.git
-CMD Ã¢
-ÇØ´ç Æú´õ °¡¼­ D:\°­¿ì¿µ\PEJ\Purchase
+CMD ì°½
+í•´ë‹¹ í´ë” ê°€ì„œ D:\ê°•ìš°ì˜\PEJ\Purchase
 git config --local credential.helper ""
 git init
-git config --global user.name "gomttang85"
-git config --global user.email "gomttang4@naver.com"
-git remote add origin https://github.com/gomttang85/purchase.git
+git config --global user.name "zzihi"
+git config --global user.email "chorocta@naver.com"
+git remote add origin https://github.com/zzihi/PEJ_DELIVERY.git
+git remote add origin https://github.com/zzihi/PEJ_MYPAGE.git
+git remote add origin https://github.com/zzihi/PEJ_ORDER.git
 git remote -v
-Git status
-Git add .
-Git commit ?m ¡°first commit¡±
-Git push ?u origin master
+git status
+git add .
+git commit -m â€œ4 commitâ€
+git push -u origin master
 
-Ubuntu ¶ç¿ì°í
-Æú´õ »ı¼º
-mkdir PEJ_gateway
-cd PEJ_gateway
-git clone https://github.com/zzihi/PEJ_GATEWAY.git
-cd PEJ_GATEWAY
+Ubuntu ë„ìš°ê³ 
+í´ë” ìƒì„±
+mkdir PEJ_mypage
+cd PEJ_mypage
+git clone https://github.com/zzihi/PEJ_MYPAGE.git
+cd PEJ_MYPAGE
 rm -rf ./target
 mvn package
 
-µµÄ¿ ÀÌ¹ÌÁö »èÁ¦ (±âÁ¸)
-docker image rm $(docker images -q) # ÇÑ¹ø¿¡ ¸ğµç µµÄ¿ ÀÌ¹ÌÁö Áö¿ì±â
+ë„ì»¤ ì´ë¯¸ì§€ ì‚­ì œ (ê¸°ì¡´)
+docker image rm $(docker images -q) # í•œë²ˆì— ëª¨ë“  ë„ì»¤ ì´ë¯¸ì§€ ì§€ìš°ê¸°
 docker images
-ECR - micro service ¸¶´Ù repository »ı¼º(repository¸íÀÌ ÀÌ¹ÌÁö¸í)
-docker build -t 496278789073.dkr.ecr.us-east-2.amazonaws.com/pej_gateway:v1 .
+ECR - micro service ë§ˆë‹¤ repository ìƒì„±(repositoryëª…ì´ ì´ë¯¸ì§€ëª…)
+docker build -t 496278789073.dkr.ecr.us-east-2.amazonaws.com/pej_mypage:v3 .
 docker images
-·Î±×ÀÎ
+ë¡œê·¸ì¸
 aws configure
 aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 496278789073.dkr.ecr.us-east-2.amazonaws.com
-docker push 496278789073.dkr.ecr.us-east-2.amazonaws.com/pej_gateway:v1
-aws¿¡¼­ ÀÌ¹ÌÁö È®ÀÎ
+docker push 496278789073.dkr.ecr.us-east-2.amazonaws.com/pej_mypage:v3
+awsì—ì„œ ì´ë¯¸ì§€ í™•ì¸
 
-ÄÁÅ×ÀÌ³Ê ¸¸µé±â
+ì»¨í…Œì´ë„ˆ ë§Œë“¤ê¸°
 eksctl create cluster --name skteam1-sk-Cluster --version 1.15 --nodegroup-name standard-workers --node-type t3.medium --nodes 2 --nodes-min 1 --nodes-max 3
 aws eks --region us-east-2 update-kubeconfig --name skteam1-sk-Cluster
-È®ÀÎ
+í™•ì¸
 kubectl config current-context
 kubectl get all
-µğÇÃ·ÎÀÌ ¸í °ÔÀÌÆ®¿şÀÌ xml °ú ¸í ¶È°°¾Æ¾ß ÇÔ.
-kubectl create deploy gateway --image=496278789073.dkr.ecr.us-east-2.amazonaws.com/pej_gateway:v1
+ë””í”Œë¡œì´ ëª… ê²Œì´íŠ¸ì›¨ì´ xml ê³¼ ëª… ë˜‘ê°™ì•„ì•¼ í•¨.
+kubectl create deploy delivery --image=496278789073.dkr.ecr.us-east-2.amazonaws.com/pej_delivery:v2
+kubectl create deploy gateway --image=496278789073.dkr.ecr.us-east-2.amazonaws.com/pej_gateway:v2
+kubectl create deploy mypage --image=496278789073.dkr.ecr.us-east-2.amazonaws.com/pej_mypage:v3
+kubectl create deploy order --image=496278789073.dkr.ecr.us-east-2.amazonaws.com/pej_order:v3
+kubectl create deploy product --image=496278789073.dkr.ecr.us-east-2.amazonaws.com/pej_propduct:v1
+kubectl create deploy purchase --image=496278789073.dkr.ecr.us-east-2.amazonaws.com/pej_purchase:v1
 kubectl get all
-kubectl expose deploy gateway  --type=ClusterIP --port=8080
+kubectl expose deploy delivery  --type=ClusterIP --port=8080
 kubectl expose deploy gateway  --type=LoadBalancer --port=8080
+kubectl expose deploy mypage  --type=ClusterIP --port=8080
+kubectl expose deploy order  --type=ClusterIP --port=8080
+kubectl expose deploy product  --type=ClusterIP --port=8080
+kubectl expose deploy purchase  --type=ClusterIP --port=8080
+ì‚­ì œ í•„ìš” ì‹œ ì‚­ì œ ì²˜ë¦¬
+kubectl delete service "delivery"
+kubectl delete service,deploy --all
 
-kubectl delete service,deploy pej-gateway
-
-Ä«ÇÁÄ« ¼³Ä¡
+ì¹´í”„ì¹´ ì„¤ì¹˜
 curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
 kubectl --namespace kube-system create sa tiller
 kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller
@@ -106,49 +118,49 @@ helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubato
 helm repo update
 helm install --name my-kafka --namespace kafka incubator/kafka
 
-kafka ¼³Ä¡ ÈÄ ¸ğ´ÏÅÍ¸µ - watch kubectl get all -n kafka 
+kafka ì„¤ì¹˜ í›„ ëª¨ë‹ˆí„°ë§ - watch kubectl get all -n kafka 
 
-Å×½ºÆ®
-PODÁÖ¼ÒÈ®ÀÎ(node IP)
+í…ŒìŠ¤íŠ¸
+PODì£¼ì†Œí™•ì¸(node IP)
 kubectl get po -o wide
 
 
 
-½Ã³ª¸®¿À Á¤¸®
+ì‹œë‚˜ë¦¬ì˜¤ ì •ë¦¬
 
-[±â´ÉÀû ¿ä±¸»çÇ×]
---¹ßÁÖ
-1. Á¡ÀåÀÌ »óÇ°À» ¹ßÁÖ ÇÑ´Ù.
-2. º»»ç°¡ ¹ßÁÖµÈ »óÇ°À» ¹è¼Û ÇÑ´Ù.
-3. ¹è¼ÛÀÌ ¿Ï·áµÇ¸é ¾Ë¹Ù°¡ »óÇ°À» ÀÔ°íÃ³¸® ÇÑ´Ù.
-4. »óÇ°¹ßÁÖ½Ã Á¡Àå ¸¶ÀÌÆäÀÌÁö¿¡ ÁÖ¹®view, ÆÇ¸Åview Ãß°¡µÈ´Ù.
+[ê¸°ëŠ¥ì  ìš”êµ¬ì‚¬í•­]
+--ë°œì£¼
+1. ì ì¥ì´ ìƒí’ˆì„ ë°œì£¼ í•œë‹¤.
+2. ë³¸ì‚¬ê°€ ë°œì£¼ëœ ìƒí’ˆì„ ë°°ì†¡ í•œë‹¤.
+3. ë°°ì†¡ì´ ì™„ë£Œë˜ë©´ ì•Œë°”ê°€ ìƒí’ˆì„ ì…ê³ ì²˜ë¦¬ í•œë‹¤.
+4. ìƒí’ˆë°œì£¼ì‹œ ì ì¥ ë§ˆì´í˜ì´ì§€ì— ì£¼ë¬¸view, íŒë§¤view ì¶”ê°€ëœë‹¤.
 
---¹ßÁÖÃë¼Ò
-1. Á¡ÀåÀÌ »óÇ°À» ¹ßÁÖÃë¼Ò ÇÒ¼öÀÖ´Ù.
-2. (½Ã½ºÅÛÀÌ) ¹ßÁÖÃë¼ÒµÈ »óÇ°À» ¹è¼ÛÃë¼ÒÇÑ´Ù
-3. »óÇ°¹ßÁÖ Ãë¼Ò½Ã Á¡Àå ¸¶ÀÌÆäÀÌÁö¿¡ ÁÖ¹®view º¯°æµÈ´Ù.
+--ë°œì£¼ì·¨ì†Œ
+1. ì ì¥ì´ ìƒí’ˆì„ ë°œì£¼ì·¨ì†Œ í• ìˆ˜ìˆë‹¤.
+2. (ì‹œìŠ¤í…œì´) ë°œì£¼ì·¨ì†Œëœ ìƒí’ˆì„ ë°°ì†¡ì·¨ì†Œí•œë‹¤
+3. ìƒí’ˆë°œì£¼ ì·¨ì†Œì‹œ ì ì¥ ë§ˆì´í˜ì´ì§€ì— ì£¼ë¬¸view ë³€ê²½ëœë‹¤.
 
---±¸¸Å
-1. °í°´ÀÌ »óÇ°À» ±¸¸ÅÇÑ´Ù.
-2. »óÇ°±¸¸Å½Ã »óÇ°ÀÇ Àç°í°¡ º¯°æ µÈ´Ù.
-3. »óÇ° ±¸¸Å½Ã Á¡Àå ¸¶ÀÌÆäÀÌÁö¿¡ ÆÇ¸Åview º¯°æµÈ´Ù.
+--êµ¬ë§¤
+1. ê³ ê°ì´ ìƒí’ˆì„ êµ¬ë§¤í•œë‹¤.
+2. ìƒí’ˆêµ¬ë§¤ì‹œ ìƒí’ˆì˜ ì¬ê³ ê°€ ë³€ê²½ ëœë‹¤.
+3. ìƒí’ˆ êµ¬ë§¤ì‹œ ì ì¥ ë§ˆì´í˜ì´ì§€ì— íŒë§¤view ë³€ê²½ëœë‹¤.
 
---±¸¸ÅÃë¼Ò
-1. °í°´ÀÌ »óÇ°±¸¸Å¸¦ Ãë¼ÒÇÑ´Ù.
-2. »óÇ°±¸¸Å Ãë¼Ò½Ã »óÇ°ÀÇ Àç°í°¡ º¯°æ µÈ´Ù.
-3. »óÇ°±¸¸Å Ãë¼Ò½Ã Á¡Àå ¸¶ÀÌÆäÀÌÁö¿¡ ÆÇ¸Åview º¯°æµÈ´Ù.
+--êµ¬ë§¤ì·¨ì†Œ
+1. ê³ ê°ì´ ìƒí’ˆêµ¬ë§¤ë¥¼ ì·¨ì†Œí•œë‹¤.
+2. ìƒí’ˆêµ¬ë§¤ ì·¨ì†Œì‹œ ìƒí’ˆì˜ ì¬ê³ ê°€ ë³€ê²½ ëœë‹¤.
+3. ìƒí’ˆêµ¬ë§¤ ì·¨ì†Œì‹œ ì ì¥ ë§ˆì´í˜ì´ì§€ì— íŒë§¤view ë³€ê²½ëœë‹¤.
 
-[ºñ±â´ÉÀû ¿ä±¸»çÇ×]
-1. Æ®·£Àè¼Ç
-- »óÇ°¹ßÁÖ Ãë¼Ò½Ã »óÇ°¹è¼Û ÀÚµ¿ Ãë¼Ò Ã³¸® Sync È£Ãâ
+[ë¹„ê¸°ëŠ¥ì  ìš”êµ¬ì‚¬í•­]
+1. íŠ¸ëœì­ì…˜
+- ìƒí’ˆë°œì£¼ ì·¨ì†Œì‹œ ìƒí’ˆë°°ì†¡ ìë™ ì·¨ì†Œ ì²˜ë¦¬ Sync í˜¸ì¶œ
 
-2. Àå¾Ö°İ¸®
-- ¸ÅÀÔ¸ÅÃâ°ü¸® ±â´ÉÀÌ ¼öÇàµÇÁö ¾Ê´õ¶óµµ ±¸¸Å´Â 365ÀÏ 24½Ã°£ °¡´ÉÇØ¾ß ÇÑ´Ù Async (event-driven), Eventual Consistency
-- ±¸¸Å°¡ °úÁßµÇ¸é Àç°íº¯°æÀ» Àá½Ãµ¿¾È ¹ŞÁö ¾Ê°í Àç°íº¯°æÀ» Àá½ÃÈÄ¿¡ ÇÏµµ·Ï À¯µµÇÑ´Ù Circuit breaker, fallback (È®ÀÎÇÊ¿ä)
+2. ì¥ì• ê²©ë¦¬
+- ë§¤ì…ë§¤ì¶œê´€ë¦¬ ê¸°ëŠ¥ì´ ìˆ˜í–‰ë˜ì§€ ì•Šë”ë¼ë„ êµ¬ë§¤ëŠ” 365ì¼ 24ì‹œê°„ ê°€ëŠ¥í•´ì•¼ í•œë‹¤ Async (event-driven), Eventual Consistency
+- êµ¬ë§¤ê°€ ê³¼ì¤‘ë˜ë©´ ì¬ê³ ë³€ê²½ì„ ì ì‹œë™ì•ˆ ë°›ì§€ ì•Šê³  ì¬ê³ ë³€ê²½ì„ ì ì‹œí›„ì— í•˜ë„ë¡ ìœ ë„í•œë‹¤ Circuit breaker, fallback (í™•ì¸í•„ìš”)
 
-3. ¼º´É
-- Á¡ÀåÀÌ ÁÖ¹®,ÆÇ¸Å È­¸éÀ¸·Î ¸ÅÀÔ¸ÅÃâÀ» Á¶È¸ÇÒ¼ö ÀÖ¾î¾ß ÇÑ´Ù CQRS
-- ±¸¸Å°¡ ¹ß»ıÇÒ¶§ ¸¶´Ù »óÇ°Àç°í°¡ º¯°æµÉ¼ö ÀÖ¾î¾ß ÇÑ´Ù Event driven
+3. ì„±ëŠ¥
+- ì ì¥ì´ ì£¼ë¬¸,íŒë§¤ í™”ë©´ìœ¼ë¡œ ë§¤ì…ë§¤ì¶œì„ ì¡°íšŒí• ìˆ˜ ìˆì–´ì•¼ í•œë‹¤ CQRS
+- êµ¬ë§¤ê°€ ë°œìƒí• ë•Œ ë§ˆë‹¤ ìƒí’ˆì¬ê³ ê°€ ë³€ê²½ë ìˆ˜ ìˆì–´ì•¼ í•œë‹¤ Event driven
 
 
 
