@@ -63,10 +63,10 @@ Git push ?u origin master
 
 Ubuntu 띄우고
 폴더 생성
-mkdir PEJ
-cd PEJ
-git clone https://github.com/niceduck76/aws-order.git
-cd aws-order
+mkdir PEJ_gateway
+cd PEJ_gateway
+git clone https://github.com/zzihi/PEJ_GATEWAY.git
+cd PEJ_GATEWAY
 rm -rf ./target
 mvn package
 
@@ -74,12 +74,12 @@ mvn package
 docker image rm $(docker images -q) # 한번에 모든 도커 이미지 지우기
 docker images
 ECR - micro service 마다 repository 생성(repository명이 이미지명)
-docker build -t 052937454741.dkr.ecr.us-east-2.amazonaws.com/admin04-order:v1 .
+docker build -t 496278789073.dkr.ecr.us-east-2.amazonaws.com/pej_gateway:v1 .
 docker images
 로그인
 aws configure
-aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 052937454741.dkr.ecr.us-east-2.amazonaws.com
-docker push 052937454741.dkr.ecr.us-east-2.amazonaws.com/admin04-order:v1
+aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 496278789073.dkr.ecr.us-east-2.amazonaws.com
+docker push 496278789073.dkr.ecr.us-east-2.amazonaws.com/pej_gateway:v1
 aws에서 이미지 확인
 
 컨테이너 만들기
@@ -88,9 +88,13 @@ aws eks --region us-east-2 update-kubeconfig --name skteam1-sk-Cluster
 확인
 kubectl config current-context
 kubectl get all
-kubectl create deploy my-order --image=052937454741.dkr.ecr.us-east-2.amazonaws.com/admin04-order:v1
+디플로이 명 게이트웨이 xml 과 명 똑같아야 함.
+kubectl create deploy gateway --image=496278789073.dkr.ecr.us-east-2.amazonaws.com/pej_gateway:v1
 kubectl get all
-Kubectl expose deploy my-order --type=ClusterIP --port=8080
+kubectl expose deploy gateway  --type=ClusterIP --port=8080
+kubectl expose deploy gateway  --type=LoadBalancer --port=8080
+
+kubectl delete service,deploy pej-gateway
 
 카프카 설치
 curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
@@ -102,7 +106,7 @@ helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubato
 helm repo update
 helm install --name my-kafka --namespace kafka incubator/kafka
 
-kafka 설치 후 모니터링 - Watch kubectl get all -n kafka 
+kafka 설치 후 모니터링 - watch kubectl get all -n kafka 
 
 테스트
 POD주소확인(node IP)
