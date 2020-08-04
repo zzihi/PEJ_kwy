@@ -1,0 +1,99 @@
+1.[Intelij]서킷브레이크(order)
+feign:
+  hystrix:
+    enabled: true
+
+hystrix:
+  command:
+    # 전역설정
+    default:
+      execution.isolation.thread.timeoutInMilliseconds: 610
+	  
+2.타임아웃 설정(delivery)
+        try {
+            Thread.currentThread().sleep((long) (400 + Math.random() * 220));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+		
+		
+1.[UBUNTU] seige 설치
+sudo apt-get update -y
+sudo apt-get install -y siege
+
+2.[UBUNTU] 로드 테스트 툴(siege) 배포
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: siege
+spec:
+  containers:
+  - name: siege
+    image: apexacme/siege-nginx
+EOF
+
+3.[UBUNTU] siege POD안에서 실행하는 법
+kubectl exec -it siege -- /bin/bash
+root@siege:/# siege -c10 -t50S -r10 --content-type "application/json" 'http://order:8080/orders/1 PATCH {"orderStatus": "CANCLED"}' -v
+
+4.[UBUNTU] 오토스케일 아웃(https://workflowy.com/s/msa/27a0ioMCzlpV04Ib#?q=php)
+kubectl apply -f https://k8s.io/examples/application/php-apache.yaml
+kubectl autoscale deployment php-apache --cpu-percent=20 --min=1 --max=10
+kubectl get hpa
+: unknown  안나와야 함
+kubectl top nodes
+: 명령이 먹어야 함
+
+- Metric Server 설치
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.6/components.yaml
+kubectl get deployment metrics-server -n kube-system
+
+-우리 deploy에 적용하기
+kubectl autoscale deploy delivery --min=1 --max=10 --cpu-percent=15
+- resource limit 설정 : kubernetes/deployment.yaml??
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
+
+
+
+[무정지재배포]
+1.readinessProbe 설정을 넣었다 뺏다 하면서 증명 => 부하가 걸리던 쪽에...
+          readinessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 10
+
+
+//
+skccadmin@SKCC16D00070:~$ kubectl get hpa
+NAME         REFERENCE               TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+delivery     Deployment/delivery     <unknown>/15%   1         10        1          7m52s
+php-apache   Deployment/php-apache   <unknown>/20%   1         10        1          69s
+skccadmin@SKCC16D00070:~$ kubectl top nodes
+Error from server (NotFound): the server could not find the requested resource (get services http:heapster:)
+skccadmin@SKCC16D00070:~$ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.6/components.yaml
+clusterrole.rbac.authorization.k8s.io/system:aggregated-metrics-reader created
+clusterrolebinding.rbac.authorization.k8s.io/metrics-server:system:auth-delegator created
+rolebinding.rbac.authorization.k8s.io/metrics-server-auth-reader created
+apiservice.apiregistration.k8s.io/v1beta1.metrics.k8s.io created
+serviceaccount/metrics-server created
+deployment.apps/metrics-server created
+service/metrics-server created
+clusterrole.rbac.authorization.k8s.io/system:metrics-server created
+clusterrolebinding.rbac.authorization.k8s.io/system:metrics-server created
+skccadmin@SKCC16D00070:~$ kubectl top nodes
+error: metrics not available yet
+skccadmin@SKCC16D00070:~$
+
+
+
+
+
